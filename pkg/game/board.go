@@ -2,9 +2,10 @@ package game
 
 // Board represents a Game of Life grid.
 type Board struct {
-	Width  int
-	Height int
-	Cells  [][]bool
+	Width      int
+	Height     int
+	Cells      [][]bool
+	Generation int // tracks the number of steps executed
 }
 
 // NewBoard creates a dead board of the given dimensions.
@@ -63,6 +64,7 @@ func (b *Board) Step() {
 		}
 	}
 	b.Cells = next.Cells
+	b.Generation++
 }
 
 // CountAlive returns the total number of alive cells.
@@ -84,5 +86,32 @@ func (b *Board) Clear() {
 		for x := 0; x < b.Width; x++ {
 			b.Cells[y][x] = false
 		}
+	}
+}
+
+// Statistics holds board statistics.
+type Statistics struct {
+	AliveCells  int // Total count of alive cells
+	DeadCells   int // Total count of dead cells
+	Generation  int // Current generation number
+	TotalCells  int // Width * Height
+	AliveRatio  float64 // Percentage of alive cells (0-1)
+}
+
+// Statistics returns current board statistics.
+func (b *Board) Statistics() Statistics {
+	alive := b.CountAlive()
+	total := b.Width * b.Height
+	dead := total - alive
+	aliveRatio := 0.0
+	if total > 0 {
+		aliveRatio = float64(alive) / float64(total)
+	}
+	return Statistics{
+		AliveCells: alive,
+		DeadCells:  dead,
+		Generation: b.Generation,
+		TotalCells: total,
+		AliveRatio: aliveRatio,
 	}
 }

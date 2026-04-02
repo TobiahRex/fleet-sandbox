@@ -78,3 +78,97 @@ func TestToroidalWrap(t *testing.T) {
 		t.Fatalf("(0,0) should have 1 neighbor at (4,4), got %d", n)
 	}
 }
+
+func TestStatisticsNewBoard(t *testing.T) {
+	b := NewBoard(10, 10)
+	stats := b.Statistics()
+
+	if stats.AliveCells != 0 {
+		t.Fatalf("new board should have 0 alive cells, got %d", stats.AliveCells)
+	}
+	if stats.DeadCells != 100 {
+		t.Fatalf("new board should have 100 dead cells, got %d", stats.DeadCells)
+	}
+	if stats.Generation != 0 {
+		t.Fatalf("new board should be at generation 0, got %d", stats.Generation)
+	}
+	if stats.TotalCells != 100 {
+		t.Fatalf("10x10 board should have 100 total cells, got %d", stats.TotalCells)
+	}
+	if stats.AliveRatio != 0.0 {
+		t.Fatalf("new board should have 0 alive ratio, got %f", stats.AliveRatio)
+	}
+}
+
+func TestStatisticsWithCells(t *testing.T) {
+	b := NewBoard(5, 5)
+	// Place a blinker (3 alive cells)
+	Blinker.Place(b, 1, 2)
+
+	stats := b.Statistics()
+
+	if stats.AliveCells != 3 {
+		t.Fatalf("board should have 3 alive cells, got %d", stats.AliveCells)
+	}
+	if stats.DeadCells != 22 {
+		t.Fatalf("board should have 22 dead cells, got %d", stats.DeadCells)
+	}
+	if stats.TotalCells != 25 {
+		t.Fatalf("5x5 board should have 25 total cells, got %d", stats.TotalCells)
+	}
+	// 3/25 = 0.12
+	expectedRatio := 3.0 / 25.0
+	if stats.AliveRatio != expectedRatio {
+		t.Fatalf("expected alive ratio %f, got %f", expectedRatio, stats.AliveRatio)
+	}
+}
+
+func TestStatisticsGenerationIncrement(t *testing.T) {
+	b := NewBoard(5, 5)
+	Block.Place(b, 1, 1)
+
+	stats0 := b.Statistics()
+	if stats0.Generation != 0 {
+		t.Fatalf("initial generation should be 0, got %d", stats0.Generation)
+	}
+
+	b.Step()
+	stats1 := b.Statistics()
+	if stats1.Generation != 1 {
+		t.Fatalf("generation should be 1 after 1 step, got %d", stats1.Generation)
+	}
+
+	b.Step()
+	stats2 := b.Statistics()
+	if stats2.Generation != 2 {
+		t.Fatalf("generation should be 2 after 2 steps, got %d", stats2.Generation)
+	}
+}
+
+func TestStatisticsBlinkerOscillation(t *testing.T) {
+	b := NewBoard(5, 5)
+	Blinker.Place(b, 1, 2)
+
+	stats0 := b.Statistics()
+	if stats0.AliveCells != 3 {
+		t.Fatalf("blinker should have 3 cells initially, got %d", stats0.AliveCells)
+	}
+
+	b.Step()
+	stats1 := b.Statistics()
+	if stats1.AliveCells != 3 {
+		t.Fatalf("blinker should have 3 cells after 1 step, got %d", stats1.AliveCells)
+	}
+	if stats1.Generation != 1 {
+		t.Fatalf("should be at generation 1, got %d", stats1.Generation)
+	}
+
+	b.Step()
+	stats2 := b.Statistics()
+	if stats2.AliveCells != 3 {
+		t.Fatalf("blinker should have 3 cells after 2 steps, got %d", stats2.AliveCells)
+	}
+	if stats2.Generation != 2 {
+		t.Fatalf("should be at generation 2, got %d", stats2.Generation)
+	}
+}
