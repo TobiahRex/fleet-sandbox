@@ -8,14 +8,17 @@ import (
 )
 
 func main() {
-	b := game.NewBoard(40, 20)
+	b := game.NewBoard(50, 25)
 
 	// Place some patterns
 	game.Glider.Place(b, 2, 2)
 	game.Blinker.Place(b, 15, 10)
 	game.Block.Place(b, 30, 5)
+	game.Toad.Place(b, 20, 3)
+	game.Beacon.Place(b, 35, 15)
+	game.LightweightSpaceship.Place(b, 5, 20)
 
-	for gen := 0; gen < 100; gen++ {
+	for gen := 0; gen < 150; gen++ {
 		// Clear screen
 		fmt.Print("\033[H\033[2J")
 		fmt.Printf("Generation %d | Alive: %d\n", gen, b.CountAlive())
