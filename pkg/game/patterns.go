@@ -32,3 +32,9 @@ var Block = Pattern{
 	Name: "Block", Width: 2, Height: 2,
 	Cells: [][2]int{{0, 0}, {1, 0}, {0, 1}, {1, 1}},
 }
+
+// Toad — period-2 oscillator.
+var Toad = Pattern{
+	Name: "Toad", Width: 4, Height: 2,
+	Cells: [][2]int{{1, 0}, {2, 0}, {3, 0}, {0, 1}, {1, 1}, {2, 1}},
+}
