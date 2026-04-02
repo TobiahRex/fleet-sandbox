@@ -1,5 +1,7 @@
 package game
 
+import "strings"
+
 // Board represents a Game of Life grid.
 type Board struct {
 	Width  int
@@ -85,4 +87,23 @@ func (b *Board) Clear() {
 			b.Cells[y][x] = false
 		}
 	}
+}
+
+// String returns a string representation of the board.
+// Alive cells are represented as 'O', dead cells as '.'.
+func (b *Board) String() string {
+	var sb strings.Builder
+	for y := 0; y < b.Height; y++ {
+		for x := 0; x < b.Width; x++ {
+			if b.Cells[y][x] {
+				sb.WriteString("O")
+			} else {
+				sb.WriteString(".")
+			}
+		}
+		if y < b.Height-1 {
+			sb.WriteString("\n")
+		}
+	}
+	return sb.String()
 }
