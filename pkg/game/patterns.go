@@ -32,3 +32,8 @@ var Block = Pattern{
 	Name: "Block", Width: 2, Height: 2,
 	Cells: [][2]int{{0, 0}, {1, 0}, {0, 1}, {1, 1}},
 }
+
+// DraftAcceptancePatternName is an unmerged graph-overlay acceptance fixture.
+func DraftAcceptancePatternName() string {
+	return "draft-only"
+}
