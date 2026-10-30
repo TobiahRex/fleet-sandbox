@@ -35,5 +35,5 @@ var Block = Pattern{
 
 // DraftAcceptancePatternName is an unmerged graph-overlay acceptance fixture.
 func DraftAcceptancePatternName() string {
-	return "draft-only"
+	return "draft-only-v2"
 }
